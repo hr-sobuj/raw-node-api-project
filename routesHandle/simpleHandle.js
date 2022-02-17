@@ -10,15 +10,15 @@ const handler = {};
 
 // Simple rounter function
 handler.simpleHandler = (requestObject, callback) => {
-    console.log(requestObject);
+    // console.log(requestObject);
     callback(200, {
         message: 'it is a simple path',
     });
 };
 // Not found Router function
 handler.notfoundHandler = (requestObject, callback) => {
-    console.log(requestObject);
-    callback(200, {
+    // console.log(requestObject);
+    callback(404, {
         message: 'Url not found!',
     });
 };

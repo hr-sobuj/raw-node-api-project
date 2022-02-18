@@ -16,7 +16,7 @@ const app = {};
 
 // testing data file 
 //TODO
-data.update('test','simple2',{'name':'habibur rahman sobuj2'},(err)=>{
+data.delete('test','simple2',(err)=>{
     console.log(err);
 })
 

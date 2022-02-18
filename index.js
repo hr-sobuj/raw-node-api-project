@@ -16,8 +16,8 @@ const app = {};
 
 // testing data file 
 //TODO
-data.read('test','simple2',(err,data)=>{
-    console.log(err,data);
+data.update('test','simple2',{'name':'habibur rahman sobuj2'},(err)=>{
+    console.log(err);
 })
 
 // Create server Function

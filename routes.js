@@ -6,7 +6,7 @@ Date: 17/2/2022
 */
 
 // Dependencies
-const handler = require('./routesHandle/simpleHandle');
+const handler = require('./handler/routesHandle/simpleHandle');
 
 // Routes object - scaffolding
 const routes = {

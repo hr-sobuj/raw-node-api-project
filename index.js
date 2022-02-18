@@ -8,19 +8,25 @@ Date: 17/2/2022
 // Dependencies
 const http = require('http');
 const { handleReqRes } = require('./helper/handlerReqRes');
+const environments=require('./helper/environment')
+const data=require('./lib/data')
 
 // App Object -Module Scaffoling
 const app = {};
-// Configaration
-app.config = {
-    port: 3000,
-    hostname: 'localhost',
-};
+
+// testing data file 
+data.create('test','simple2',{
+    sobuj:'sobuj'
+},(err)=>{
+    console.log(err);
+})
+
 // Create server Function
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
-    server.listen(app.config.port, app.config.hostname, () => {
-        console.log(`listen the server ${app.config.port}`);
+    server.listen(environments.port, environments.hostname, () => {
+        // console.log(environment);
+        console.log(`listen the server ${environments.port}`);
     });
 };
 // Handle request and response

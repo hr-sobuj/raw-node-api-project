@@ -7,12 +7,12 @@
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.5.1"
   },
-  "name": "row-node-api-project",
+  "name": "raw-node-api-project",
   "version": "1.0.0",
   "description": "Basic Node Js API Project",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index",
+    "start": "SET NODE_ENV=production & nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

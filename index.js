@@ -15,10 +15,9 @@ const data=require('./lib/data')
 const app = {};
 
 // testing data file 
-data.create('test','simple2',{
-    sobuj:'sobuj'
-},(err)=>{
-    console.log(err);
+//TODO
+data.read('test','simple2',(err,data)=>{
+    console.log(err,data);
 })
 
 // Create server Function

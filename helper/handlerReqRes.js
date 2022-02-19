@@ -9,6 +9,7 @@ Date: 17/2/2022
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const routes = require('../routes');
+const {notfoundHandler}=require('../handler/routesHandle/notFound')
 // App Object -Module Scaffoling
 const handler = {};
 // Configaration
@@ -31,7 +32,7 @@ handler.handleReqRes = (req, res) => {
         trimmedPath,
         method,
     };
-    const chooseHandler = routes[trimmedPath] ? routes[trimmedPath] : routes.notfound;
+    const chooseHandler = routes[trimmedPath] ? routes[trimmedPath] : notfoundHandler;
     chooseHandler(requestObject, (statusCode, payload) => {
         const statuscode = typeof statusCode === 'number' ? statusCode : 500;
         const payloadobj = typeof payload === 'object' ? payload : {};

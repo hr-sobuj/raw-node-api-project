@@ -6,12 +6,13 @@ Date: 17/2/2022
 */
 
 // Dependencies
-const handler = require('./handler/routesHandle/simpleHandle');
+const {simpleHandler}=require('./handler/routesHandle/simpleRoute')
+const {userHandler}=require('./handler/routesHandle/userRoute')
 
 // Routes object - scaffolding
 const routes = {
-    simple: handler.simpleHandler,
-    notfound: handler.notfoundHandler,
+    simple: simpleHandler,
+    user:userHandler,
 };
 
 // Export module

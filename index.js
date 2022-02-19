@@ -14,11 +14,7 @@ const data=require('./lib/data')
 // App Object -Module Scaffoling
 const app = {};
 
-// testing data file 
-//TODO
-data.delete('test','simple2',(err)=>{
-    console.log(err);
-})
+
 
 // Create server Function
 app.createServer = () => {

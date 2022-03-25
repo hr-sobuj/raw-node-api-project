@@ -14,6 +14,15 @@ const data=require('./lib/data')
 // App Object -Module Scaffoling
 const app = {};
 
+// test api 
+// let smdata={
+//     name:"sobuj",
+    
+// }
+// data.delete("test","smsobuj",(err)=>{
+//     console.log(err);
+// });
+
 
 
 // Create server Function

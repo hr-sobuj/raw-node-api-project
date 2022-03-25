@@ -7,7 +7,7 @@ Date: 17/2/2022
 
 // Dependency 
 const {read,write,create}=require('../../lib/data')
-const {hasingPass}=require('../../helper/utilities')
+const {hasingPass,parseJson}=require('../../helper/utilities')
 // app object - scaffolding
 const handler = {};
 
@@ -28,7 +28,7 @@ handler._user={};
 handler._user.post=(requestObject,callback)=>{
 
     // console.log(requestObject);
-console.log(typeof(requestObject.body.toAgreement));
+
     const firstName=typeof(requestObject.body.firstName)==='string' &&  requestObject.body.firstName.trim().length>0?requestObject.body.firstName:false;
 
     const lastName=typeof(requestObject.body.lastName)==='string' &&  requestObject.body.lastName.trim().length>0? requestObject.body.lastName:false;
@@ -39,7 +39,7 @@ console.log(typeof(requestObject.body.toAgreement));
 
     const toAgreement=typeof(requestObject.body.toAgreement)==='boolean'?requestObject.body.toAgreement:false;
 
-    console.log(firstName,lastName,phone,password,toAgreement);
+    // console.log(firstName,lastName,phone,password,toAgreement);
 
     if(firstName && lastName && phone && password && toAgreement){
         read('user',phone,(err)=>{
@@ -79,7 +79,30 @@ console.log(typeof(requestObject.body.toAgreement));
     }
 };
 handler._user.get=(requestObject,callback)=>{
-    callback(200)
+    
+    const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
+// console.log(phone);
+    if(phone){
+        read('user',phone,(err,data)=>{
+            // console.log(data);
+            let users={...parseJson(data)}
+            // console.log(users);
+            if(!err ){
+                delete users.password;
+                callback(200,users);
+            }
+            else{
+                callback(400,{
+                    error:"User not found!"
+                });
+            
+            }
+        })
+    }else{
+        callback(400,{
+            error:"Phone number invalid!"
+        })
+    }
 };
 handler._user.put=(requestObject,callback)=>{
     callback(200)

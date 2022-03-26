@@ -84,13 +84,13 @@ handler._token.post = (requestObject, callback) => {
 };
 handler._token.get = (requestObject, callback) => {
 
-    console.log(requestObject.qureyObject.id);
+    // console.log(requestObject.qureyObject.id);
      
     const id=typeof(requestObject.qureyObject.id)==='string' &&  requestObject.qureyObject.id.trim().length===21? requestObject.qureyObject.id:false;
-console.log(id);
+// console.log(id);
     if(id){
         data.read('token',id,(err,Tokendata)=>{
-            console.log("Tokendata",Tokendata);
+            // console.log("Tokendata",Tokendata);
             let token={...parseJSON(Tokendata)}
             // console.log(users);
             if(!err ){
@@ -115,7 +115,37 @@ handler._token.put = (requestObject, callback) => {
 };
 
 handler._token.delete = (requestObject, callback) => {
-
+    const id=typeof(requestObject.qureyObject.id)==='string' &&  requestObject.qureyObject.id.trim().length===21? requestObject.qureyObject.id:false;
+    // console.log(phone);
+        if(id){
+            data.read('token',id,(err,tokenData)=>{
+                const token={...parseJSON(tokenData)}
+                if(token){
+                    data.delete('token',id,(error)=>{
+                        if(!error){
+                            callback(200,{
+                                message:"Token is deleted!"
+                            })
+                        }
+                        else{
+                            callback(400,{
+                                error:"Operations failed!"
+                            })
+                        }
+                    })
+                }
+                else{
+                    callback(400,{
+                        error:"Your request is invalid!"
+                    })
+                }
+            })
+        }
+        else{
+            callback(400,{
+                error:"Invalid token!"
+            })
+        }
 };
 // Export module
 module.exports = handler;

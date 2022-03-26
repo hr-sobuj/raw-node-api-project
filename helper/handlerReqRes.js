@@ -10,7 +10,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const routes = require('../routes');
 const {notfoundHandler}=require('../handler/routesHandle/notFound');
-const {parseJson}=require('../helper/utilities');
+const {parseJSON}=require('../helper/utilities');
 
 // App Object -Module Scaffoling
 const handler = {};
@@ -46,8 +46,8 @@ handler.handleReqRes = (req, res) => {
     });
     req.on('end', () => {
         realData += decoder.end();
-        console.log("real_data_top",realData);
-        console.log("real_data_top",typeof(realData));
+        // console.log("real_data_top",realData);
+        // console.log("real_data_top",typeof(realData));
         // requestObject.body = (realData)=>{
         //     let output;
         //     try {
@@ -57,7 +57,8 @@ handler.handleReqRes = (req, res) => {
         //     }
         //     return output;
         // };
-        requestObject.body = parseJson(realData);
+        requestObject.body = JSON.parse(realData);
+        // requestObject.body = parseJSON(realData);
         console.log("real data",requestObject.body);
         chooseHandler(requestObject, (statusCode, payload) => {
             const statuscode = typeof statusCode === 'number' ? statusCode : 500;

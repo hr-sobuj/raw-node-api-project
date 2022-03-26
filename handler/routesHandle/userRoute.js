@@ -6,10 +6,10 @@ Date: 17/2/2022
 */
 
 // Dependency 
-const {read,write,create, update}=require('../../lib/data')
+const {read,create, update}=require('../../lib/data')
 const data=require('../../lib/data')
-const {hasingPass,parseJson}=require('../../helper/utilities');
-const { user } = require('../../routes');
+const {hasingPass,parseJSON}=require('../../helper/utilities');
+
 // app object - scaffolding
 const handler = {};
 
@@ -19,7 +19,7 @@ handler.userHandler = (requestObject, callback) => {
     const acceptedMethod=['get','post','put','delete'];
     if(acceptedMethod.indexOf(requestObject.method)>-1){
         handler._user[requestObject.method](requestObject,callback);
-        console.log("accept");
+
     }
     else{
         callback(405);
@@ -88,7 +88,7 @@ handler._user.get=(requestObject,callback)=>{
     if(phone){
         read('user',phone,(err,data)=>{
             // console.log(data);
-            let users={...parseJson(data)}
+            let users={...parseJSON(data)}
             // console.log(users);
             if(!err ){
                 delete users.password;
@@ -122,7 +122,7 @@ handler._user.put=(requestObject,callback)=>{
     if(phone){
         if(firstName||lastName||password){
             read('user',phone,(error,uData)=>{
-                const userData={...parseJson(uData)}
+                const userData={...parseJSON(uData)}
                 console.log("uinfo",userData);
                 if(userData){
                         
@@ -176,7 +176,7 @@ handler._user.delete=(requestObject,callback)=>{
 console.log(phone);
     if(phone){
         read('user',phone,(err,uData)=>{
-            const userData={...parseJson(uData)}
+            const userData={...parseJSON(uData)}
             if(userData){
                 data.delete('user',phone,(error)=>{
                     if(!error){

@@ -12,7 +12,8 @@ const crypto = require('crypto');
 const utilities={};
 
 // parse string to json 
-utilities.parseJson = (jsonString) => {
+utilities.parseJSON= (jsonString) => {
+    console.log("jsonString",jsonString);
     let output;
 
     try {
@@ -21,7 +22,7 @@ utilities.parseJson = (jsonString) => {
         console.log(error);
         output = {};
     }
-
+    console.log("output",output);
     return output;
 };
 // utilities.parseJson=(jsonString)=>{
@@ -49,6 +50,19 @@ utilities.hasingPass=(str)=>{
     return false;
 
 }
+// random number generator 
+utilities.createRandomToken=(strlen)=>{
+    let leng=typeof(strlen)==='number'?strlen:false
+    let possibleCharacter="abcdefghijklmnopqrstuvwxyz0123456789";
+    let possibleLen=possibleCharacter.length;
+    let output1;
+    for(let i=0;i<=leng;i++){
+        let randomCharacter=possibleCharacter.charAt(Math.floor(Math.random()*possibleLen))
+        // console.log(randomCharacter);
+        output1+=randomCharacter;
+    }
+    return output1;
 
+}
 // export module 
 module.exports=utilities;

@@ -7,6 +7,7 @@ Date: 17/2/2022
 
 // Dependency 
 const {read,write,create, update}=require('../../lib/data')
+const data=require('../../lib/data')
 const {hasingPass,parseJson}=require('../../helper/utilities');
 const { user } = require('../../routes');
 // app object - scaffolding
@@ -83,7 +84,7 @@ handler._user.post=(requestObject,callback)=>{
 handler._user.get=(requestObject,callback)=>{
     
     const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
-console.log(phone);
+// console.log(phone);
     if(phone){
         read('user',phone,(err,data)=>{
             // console.log(data);
@@ -170,7 +171,38 @@ handler._user.put=(requestObject,callback)=>{
 };
 
 handler._user.delete=(requestObject,callback)=>{
-    callback(200)
+      
+    const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
+console.log(phone);
+    if(phone){
+        read('user',phone,(err,uData)=>{
+            const userData={...parseJson(uData)}
+            if(userData){
+                data.delete('user',phone,(error)=>{
+                    if(!error){
+                        callback(200,{
+                            message:"User information is deleted!"
+                        })
+                    }
+                    else{
+                        callback(400,{
+                            error:"Delete failed!"
+                        })
+                    }
+                })
+            }
+            else{
+                callback(400,{
+                    error:"Your request is invalid!"
+                })
+            }
+        })
+    }
+    else{
+        callback(400,{
+            error:"Invalid Phone number"
+        })
+    }
 };
 // Export module
 module.exports = handler;

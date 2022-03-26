@@ -9,7 +9,7 @@ Date: 17/2/2022
 const {read,create, update}=require('../../lib/data')
 const data=require('../../lib/data')
 const {hasingPass,parseJSON}=require('../../helper/utilities');
-
+const tokenRoute=require('./tokenRoute')
 // app object - scaffolding
 const handler = {};
 
@@ -84,23 +84,39 @@ handler._user.post=(requestObject,callback)=>{
 handler._user.get=(requestObject,callback)=>{
     
     const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
-// console.log(phone);
+
+    // console.log(phone);
+    const id=typeof(requestObject.headersObject.token)==='string' && requestObject.headersObject.token.trim().length===21?requestObject.headersObject.token:false;
+
+
+
+
     if(phone){
-        read('user',phone,(err,data)=>{
-            // console.log(data);
-            let users={...parseJSON(data)}
-            // console.log(users);
-            if(!err ){
-                delete users.password;
-                callback(200,users);
+        tokenRoute._token.verify(id,phone,(validToken)=>{
+            if(validToken){
+                read('user',phone,(err,data)=>{
+                    // console.log(data);
+                    let users={...parseJSON(data)}
+                    // console.log(users);
+                    if(!err ){
+                        delete users.password;
+                        callback(200,users);
+                    }
+                    else{
+                        callback(400,{
+                            error:"User not found!"
+                        });
+                    
+                    }
+                })
             }
             else{
-                callback(400,{
-                    error:"User not found!"
+                callback(403,{
+                    error:"Authentication Failed!"
                 });
-            
             }
         })
+       
     }else{
         callback(400,{
             error:"Phone number invalid!"

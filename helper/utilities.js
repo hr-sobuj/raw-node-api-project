@@ -13,16 +13,16 @@ const utilities={};
 
 // parse string to json 
 utilities.parseJSON= (jsonString) => {
-    console.log("jsonString",jsonString);
+    // console.log("jsonString",jsonString);
     let output;
 
     try {
         output = JSON.parse(jsonString);
     } catch(error) {
-        console.log(error);
+        // console.log(error);
         output = {};
     }
-    console.log("output",output);
+    // console.log("output",output);
     return output;
 };
 // utilities.parseJson=(jsonString)=>{
@@ -52,15 +52,18 @@ utilities.hasingPass=(str)=>{
 }
 // random number generator 
 utilities.createRandomToken=(strlen)=>{
-    let leng=typeof(strlen)==='number'?strlen:false
+    let length=typeof(strlen)==='number' && strlen>0 ?strlen:false
     let possibleCharacter="abcdefghijklmnopqrstuvwxyz0123456789";
     let possibleLen=possibleCharacter.length;
-    let output1;
-    for(let i=0;i<=leng;i++){
+    let output1='';
+   if(length){
+    for(let i=0;i<=length;i++){
         let randomCharacter=possibleCharacter.charAt(Math.floor(Math.random()*possibleLen))
         // console.log(randomCharacter);
         output1+=randomCharacter;
     }
+   }
+    // console.log("tokenOutput",output1);
     return output1;
 
 }

@@ -14,7 +14,7 @@ const handler = {};
 
 // Simple rounter function
 handler.tokenHandler = (requestObject, callback) => {
-    console.log(requestObject);
+    // console.log(requestObject);
     const acceptedMethod = ['get', 'post', 'put', 'delete'];
     if (acceptedMethod.indexOf(requestObject.method) > -1) {
         handler._token[requestObject.method](requestObject, callback);
@@ -46,6 +46,7 @@ handler._token.post = (requestObject, callback) => {
                 if (userData.password === pass) {
                     let tokenId = createRandomToken(20);
                     let expires = Date.now() * 60 * 60 * 1000;
+                    // console.log(tokenId);
                     let tokenObj = {
                         tokenId,
                         phone,
@@ -83,6 +84,30 @@ handler._token.post = (requestObject, callback) => {
 };
 handler._token.get = (requestObject, callback) => {
 
+    console.log(requestObject.qureyObject.id);
+     
+    const id=typeof(requestObject.qureyObject.id)==='string' &&  requestObject.qureyObject.id.trim().length===21? requestObject.qureyObject.id:false;
+console.log(id);
+    if(id){
+        data.read('token',id,(err,Tokendata)=>{
+            console.log("Tokendata",Tokendata);
+            let token={...parseJSON(Tokendata)}
+            // console.log(users);
+            if(!err ){
+                callback(200,token);
+            }
+            else{
+                callback(400,{
+                    error:"Token not found!"
+                });
+            
+            }
+        })
+    }else{
+        callback(400,{
+            error:"Token invalid!"
+        })
+    }
 
 };
 handler._token.put = (requestObject, callback) => {

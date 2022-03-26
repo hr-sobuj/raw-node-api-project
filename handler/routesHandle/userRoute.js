@@ -118,12 +118,12 @@ handler._user.put=(requestObject,callback)=>{
 
     const password=typeof(requestObject.body.password)==='string' &&  requestObject.body.password.trim().length>0? requestObject.body.password:false;
 
-    console.log(requestObject);
+    // console.log(requestObject);
     if(phone){
         if(firstName||lastName||password){
             read('user',phone,(error,uData)=>{
                 const userData={...parseJSON(uData)}
-                console.log("uinfo",userData);
+                // console.log("uinfo",userData);
                 if(userData){
                         
                             if(firstName){
@@ -173,7 +173,7 @@ handler._user.put=(requestObject,callback)=>{
 handler._user.delete=(requestObject,callback)=>{
       
     const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
-console.log(phone);
+// console.log(phone);
     if(phone){
         read('user',phone,(err,uData)=>{
             const userData={...parseJSON(uData)}

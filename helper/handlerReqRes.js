@@ -17,6 +17,7 @@ const handler = {};
 // Configaration
 
 handler.handleReqRes = (req, res) => {
+    // console.log(req);
     // res.end('hello')
     const parseUrl = url.parse(req.url, true);
     const qureyObject = parseUrl.query;
@@ -45,9 +46,19 @@ handler.handleReqRes = (req, res) => {
     });
     req.on('end', () => {
         realData += decoder.end();
-        // console.log(realData);
+        console.log("real_data_top",realData);
+        console.log("real_data_top",typeof(realData));
+        // requestObject.body = (realData)=>{
+        //     let output;
+        //     try {
+        //         output=JSON.parse(realData)
+        //     } catch (error) {
+        //         output={}
+        //     }
+        //     return output;
+        // };
         requestObject.body = parseJson(realData);
-        // console.log(parseJson(realData));
+        console.log("real data",requestObject.body);
         chooseHandler(requestObject, (statusCode, payload) => {
             const statuscode = typeof statusCode === 'number' ? statusCode : 500;
             const payloadobj = typeof payload === 'object' ? payload : {};

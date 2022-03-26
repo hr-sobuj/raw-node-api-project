@@ -6,8 +6,9 @@ Date: 17/2/2022
 */
 
 // Dependency 
-const {read,write,create}=require('../../lib/data')
-const {hasingPass,parseJson}=require('../../helper/utilities')
+const {read,write,create, update}=require('../../lib/data')
+const {hasingPass,parseJson}=require('../../helper/utilities');
+const { user } = require('../../routes');
 // app object - scaffolding
 const handler = {};
 
@@ -35,10 +36,11 @@ handler._user.post=(requestObject,callback)=>{
 
     const phone=typeof(requestObject.body.phone)==='string' &&  requestObject.body.phone.trim().length===11? requestObject.body.phone:false;
 
-    const password=typeof(requestObject.body.password)==='string' &&  requestObject.body.password.trim().length>0? requestObject.body.password:false;
+    const password=typeof(requestObject.body.password)==='string' && requestObject.body.password.trim().length>0? requestObject.body.password:false;
 
     const toAgreement=typeof(requestObject.body.toAgreement)==='boolean'?requestObject.body.toAgreement:false;
 
+    // console.log("password",typeof(requestObject.body.password));
     // console.log(firstName,lastName,phone,password,toAgreement);
 
     if(firstName && lastName && phone && password && toAgreement){
@@ -81,7 +83,7 @@ handler._user.post=(requestObject,callback)=>{
 handler._user.get=(requestObject,callback)=>{
     
     const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
-// console.log(phone);
+console.log(phone);
     if(phone){
         read('user',phone,(err,data)=>{
             // console.log(data);
@@ -105,8 +107,70 @@ handler._user.get=(requestObject,callback)=>{
     }
 };
 handler._user.put=(requestObject,callback)=>{
-    callback(200)
+
+// console.log("requestObject",requestObject);
+    const firstName=typeof(requestObject.body.firstName)==='string' &&  requestObject.body.firstName.trim().length>0?requestObject.body.firstName:false;
+
+    const lastName=typeof(requestObject.body.lastName)==='string' &&  requestObject.body.lastName.trim().length>0? requestObject.body.lastName:false;
+
+    const phone=typeof(requestObject.body.phone)==='string' &&  requestObject.body.phone.trim().length===11? requestObject.body.phone:false;
+
+    const password=typeof(requestObject.body.password)==='string' &&  requestObject.body.password.trim().length>0? requestObject.body.password:false;
+
+    console.log(requestObject);
+    if(phone){
+        if(firstName||lastName||password){
+            read('user',phone,(error,uData)=>{
+                const userData={...parseJson(uData)}
+                console.log("uinfo",userData);
+                if(userData){
+                        
+                            if(firstName){
+                                userData.firstName=firstName
+                            }
+                            if(lastName){
+                                userData.lastName=lastName
+                            }
+                            if(password){
+                                userData.password=hasingPass(password)
+                            }
+                            update('user',phone,userData,(err1)=>{
+                                if(!err1){
+                                    callback(200,{
+                                        message:"User Updated Successfully!"
+                                    })
+                                }
+                                else{
+                                    callback(200,{
+                                        message:"There is an problem for update!"
+                                    })
+                                }
+                            })
+                }
+                else{
+                    callback(400,{
+                        error:"There has an error in server side!"
+                    })
+                }
+            })
+        }
+        else{
+            callback(400,{
+                error:"You have a problem in your request"
+            })
+        }
+    }
+    else{
+        callback(400,{
+            error:"Invalid Phone number!"
+        })
+    }
+
+
 };
 
+handler._user.delete=(requestObject,callback)=>{
+    callback(200)
+};
 // Export module
 module.exports = handler;

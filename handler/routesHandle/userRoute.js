@@ -134,48 +134,64 @@ handler._user.put=(requestObject,callback)=>{
 
     const password=typeof(requestObject.body.password)==='string' &&  requestObject.body.password.trim().length>0? requestObject.body.password:false;
 
+      // console.log(phone);
+      const id=typeof(requestObject.headersObject.token)==='string' && requestObject.headersObject.token.trim().length===21?requestObject.headersObject.token:false;
+
+
     // console.log(requestObject);
     if(phone){
-        if(firstName||lastName||password){
-            read('user',phone,(error,uData)=>{
-                const userData={...parseJSON(uData)}
-                // console.log("uinfo",userData);
-                if(userData){
-                        
-                            if(firstName){
-                                userData.firstName=firstName
-                            }
-                            if(lastName){
-                                userData.lastName=lastName
-                            }
-                            if(password){
-                                userData.password=hasingPass(password)
-                            }
-                            update('user',phone,userData,(err1)=>{
-                                if(!err1){
-                                    callback(200,{
-                                        message:"User Updated Successfully!"
+
+        tokenRoute._token.verify(id,phone,(validToken)=>{
+            if(validToken){
+                if(firstName||lastName||password){
+                    read('user',phone,(error,uData)=>{
+                        const userData={...parseJSON(uData)}
+                        // console.log("uinfo",userData);
+                        if(userData){
+                                
+                                    if(firstName){
+                                        userData.firstName=firstName
+                                    }
+                                    if(lastName){
+                                        userData.lastName=lastName
+                                    }
+                                    if(password){
+                                        userData.password=hasingPass(password)
+                                    }
+                                    update('user',phone,userData,(err1)=>{
+                                        if(!err1){
+                                            callback(200,{
+                                                message:"User Updated Successfully!"
+                                            })
+                                        }
+                                        else{
+                                            callback(200,{
+                                                message:"There is an problem for update!"
+                                            })
+                                        }
                                     })
-                                }
-                                else{
-                                    callback(200,{
-                                        message:"There is an problem for update!"
-                                    })
-                                }
+                        }
+                        else{
+                            callback(400,{
+                                error:"There has an error in server side!"
                             })
+                        }
+                    })
                 }
                 else{
                     callback(400,{
-                        error:"There has an error in server side!"
+                        error:"You have a problem in your request"
                     })
                 }
-            })
-        }
-        else{
-            callback(400,{
-                error:"You have a problem in your request"
-            })
-        }
+            }
+            else{
+                callback(403,{
+                    error:"Authentication Failed!"
+                });
+            }
+        })
+
+      
     }
     else{
         callback(400,{
@@ -190,29 +206,46 @@ handler._user.delete=(requestObject,callback)=>{
       
     const phone=typeof(requestObject.qureyObject.phone)==='string' &&  requestObject.qureyObject.phone.trim().length===11? requestObject.qureyObject.phone:false;
 // console.log(phone);
+  // console.log(phone);
+  const id=typeof(requestObject.headersObject.token)==='string' && requestObject.headersObject.token.trim().length===21?requestObject.headersObject.token:false;
+
+
     if(phone){
-        read('user',phone,(err,uData)=>{
-            const userData={...parseJSON(uData)}
-            if(userData){
-                data.delete('user',phone,(error)=>{
-                    if(!error){
-                        callback(200,{
-                            message:"User information is deleted!"
+
+        tokenRoute._token.verify(id,phone,(validToken)=>{
+            if(validToken){
+                read('user',phone,(err,uData)=>{
+                    const userData={...parseJSON(uData)}
+                    if(userData){
+                        data.delete('user',phone,(error)=>{
+                            if(!error){
+                                callback(200,{
+                                    message:"User information is deleted!"
+                                })
+                            }
+                            else{
+                                callback(400,{
+                                    error:"Delete failed!"
+                                })
+                            }
                         })
                     }
                     else{
                         callback(400,{
-                            error:"Delete failed!"
+                            error:"Your request is invalid!"
                         })
                     }
                 })
             }
             else{
-                callback(400,{
-                    error:"Your request is invalid!"
-                })
+                callback(403,{
+                    error:"Authentication Failed!"
+                });
             }
         })
+
+
+      
     }
     else{
         callback(400,{

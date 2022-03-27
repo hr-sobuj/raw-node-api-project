@@ -1,0 +1,19 @@
+{
+    "protocol":"http",
+    "url":"googl.com",
+    "method":"GET",
+    "successCodes":"200",
+    "timeOutSeconds":"1"
+}
+
+{
+    "firstName":"sobuj4",
+    "lastName":"habibur4",
+    "phone":"01797972527",
+    "password":"123456",
+    "toAgreement":true
+}
+{
+    "id":"j3xphewgc94wi46p9f370",
+    "extend":true
+}

@@ -41,7 +41,7 @@ handler._check.post = (requestObject, callback) => {
 
     const timeOutSeconds = typeof (requestObject.body.timeOutSeconds) === 'number' && requestObject.body.timeOutSeconds % 1 === 0 && requestObject.body.timeOutSeconds >= 1 && requestObject.body.timeOutSeconds <= 5 ? requestObject.body.timeOutSeconds : false;
 
-    console.log(protocol , url ,method , successCodes , timeOutSeconds);
+    console.log(protocol, url, method, successCodes, timeOutSeconds);
 
     if (protocol && url && method && successCodes && timeOutSeconds) {
 
@@ -123,15 +123,208 @@ handler._check.post = (requestObject, callback) => {
 
 };
 handler._check.get = (requestObject, callback) => {
+    const id =
+        typeof requestObject.qureyObject.id === 'string' &&
+            requestObject.qureyObject.id.trim().length === 21
+            ? requestObject.qureyObject.id
+            : false;
 
+    // console.log(id);
+
+    if (id) {
+        data.read('check', id, (err, checkData) => {
+            const checkObj = parseJSON(checkData)
+            // console.log(checkData);
+            if (checkObj) {
+                const tokenId = typeof requestObject.headersObject.token === 'string'
+                    ? requestObject.headersObject.token
+                    : false;
+                tokenRoute._token.verify(tokenId, checkObj.phone, (bools) => {
+                    if (bools) {
+                        callback(200, checkObj)
+                    } else {
+                        callback(400, {
+                            error: "Authentication failed!"
+                        })
+                    }
+                })
+            } else {
+                callback(400, {
+                    error: "There is an error in Server side!"
+                })
+            }
+        })
+    } else {
+        callback(400, {
+            error: "Invalid TokenID!"
+        })
+    }
 };
 handler._check.put = (requestObject, callback) => {
 
+    const protocol = typeof (requestObject.body.protocol) === 'string' && ['http', 'https'].indexOf(requestObject.body.protocol) > -1 ? requestObject.body.protocol : false;
+
+    const url = typeof (requestObject.body.url) === 'string' && requestObject.body.url.trim().length > 0 ? requestObject.body.url : false;
+
+    const method = typeof (requestObject.body.method) === 'string' && ['GET', 'POST', 'PUT', 'DELETE'].indexOf(requestObject.body.method) > -1 ? requestObject.body.method : false;
+
+    const successCodes = typeof (requestObject.body.successCodes) === 'object' && requestObject.body.successCodes instanceof Array ? requestObject.body.successCodes : false;
+
+    const timeOutSeconds = typeof (requestObject.body.timeOutSeconds) === 'number' && requestObject.body.timeOutSeconds % 1 === 0 && requestObject.body.timeOutSeconds >= 1 && requestObject.body.timeOutSeconds <= 5 ? requestObject.body.timeOutSeconds : false;
+
+
+    const id =
+        typeof requestObject.qureyObject.id === 'string' &&
+            requestObject.qureyObject.id.trim().length === 21
+            ? requestObject.qureyObject.id
+            : false;
+
+        if(id){
+            if(protocol||url||method||successCodes||timeOutSeconds){
+                data.read('check',id,(err,checkData)=>{
+                    const checkObj=parseJSON(checkData);
+                    console.log(checkObj);
+                    if(checkObj){
+                        const tokenId = typeof requestObject.headersObject.token === 'string'
+                        ? requestObject.headersObject.token
+                        : false;
+                    tokenRoute._token.verify(tokenId,checkObj.phone,(bools)=>{
+                        if(bools){
+                            if(protocol){
+                                checkObj.protocol=protocol
+                            }
+                            if(url){
+                                checkObj.url=url
+                            }
+                            if(method){
+                                checkObj.method=method
+                            }
+                            if(successCodes){
+                                checkObj.successCodes=successCodes
+                            }
+                            if(timeOutSeconds){
+                                checkObj.timeOutSeconds=timeOutSeconds
+                            }
+
+                            data.update('check',id,checkObj,(err)=>{
+                                if(!err){
+                                    callback(400, checkObj) 
+                                }
+                                else{
+                                    callback(400, {
+                                        error: "Update failed!"
+                                    }) 
+                                }
+                            })
+                        }else{
+                            callback(400, {
+                                error: "Authentication failed!"
+                            }) 
+                        }
+                    })
+                    }else {
+                        callback(400, {
+                            error: "There has been a problem in your request!"
+                        })
+                    }
+                })
+            }else{
+                callback(400, {
+                    error: "There has been a problem in your request!"
+                })
+            }
+        }
+        else {
+            callback(400, {
+                error: "There has been a problem in your request!"
+            })
+        }
 
 };
 
 handler._check.delete = (requestObject, callback) => {
+    const id =
+        typeof requestObject.qureyObject.id === 'string' &&
+            requestObject.qureyObject.id.trim().length === 21
+            ? requestObject.qureyObject.id
+            : false;
 
+    // console.log(id);
+
+    if (id) {
+        data.read('check', id, (err, checkData) => {
+            const checkObj = parseJSON(checkData)
+            // console.log(checkData);
+            if (checkObj) {
+                const tokenId = typeof requestObject.headersObject.token === 'string'
+                    ? requestObject.headersObject.token
+                    : false;
+                tokenRoute._token.verify(tokenId, checkObj.phone, (bools) => {
+                    if (bools) {
+                        data.read('user', checkObj.phone, (err, uData) => {
+                            console.log(uData);
+                            const userData = parseJSON(uData);
+                            if (userData) {
+
+
+                                const userCheck = typeof userData.check === 'object' && userData.check instanceof Array ? userData.check : [];
+
+                                console.log(userCheck);
+
+                                const possiblePosition = userCheck.indexOf(id);
+
+                                console.log(possiblePosition);
+                                if (possiblePosition > -1) {
+                                    userCheck.splice(possiblePosition - 1, 1)
+                                    userData.check = userCheck;
+
+                                    data.update('user', checkData.phone, userData, (err) => {
+                                        if (!err) {
+                                            callback(200, {
+                                                userData
+                                            })
+                                        } else {
+                                            callback(400, {
+                                                error: "Update failed!"
+                                            })
+                                        }
+                                    })
+                                }
+
+                            } else {
+                                callback(400, {
+                                    error: "User information not found !"
+                                })
+                            }
+                        })
+                        data.delete('check', id, (err) => {
+                            if (!err) {
+                                callback(200, {
+                                    error: "Deleted!"
+                                })
+                            } else {
+                                callback(400, {
+                                    error: "There have been a problem!"
+                                })
+                            }
+                        })
+                    } else {
+                        callback(400, {
+                            error: "Authentication failed!"
+                        })
+                    }
+                })
+            } else {
+                callback(400, {
+                    error: "There is an error in Server side!"
+                })
+            }
+        })
+    } else {
+        callback(400, {
+            error: "Invalid TokenID!"
+        })
+    }
 };
 // Export module
 module.exports = handler;

@@ -23,24 +23,24 @@ notification.sendSMS=(phone,msg,callback)=>{
 
     if(uPhone && uMsg){
         const payload={
-            From:twilio.twilio.fromPhone,
-            To:`+88${uPhone}`,
-            Body:uMsg
+            From:'+15017122661',
+            To:`+15558675310`,
+            Body:'hello'
         }
 
         const stringifyPayload=querystring.stringify(payload);
 
-        const options = {
+        const requestDetails = {
             hostname: 'api.twilio.com',
-            auth: `${twilio.twilio.accountsid}:${twilio.twilio.authToken}`,
-            path: `/2010-04-01/Accounts/${twilio.twilio.accountsid}/Messages.json`,
             method: 'POST',
+            path: `/2010-04-01/Accounts/ACa67b65d80c6c2e033254da6bc6cddeb6/Messages.json`,
+            auth: `ACa67b65d80c6c2e033254da6bc6cddeb6:1b4a225eb55bb00518d6d0937b438e53`,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-          };
+            },
+        };
 
-          const req=https.request(options,(res)=>{
+          const req=https.request(requestDetails,(res)=>{
               const statusCode=res.statusCode;
               if(statusCode===200 || statusCode===201){
                   callback(false)

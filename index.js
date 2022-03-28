@@ -9,7 +9,7 @@ Date: 17/2/2022
 const http = require('http');
 const { handleReqRes } = require('./helper/handlerReqRes');
 const environments=require('./helper/environment')
-const data=require('./lib/data')
+const notification=require('./helper/notification')
 
 // App Object -Module Scaffoling
 const app = {};
@@ -22,14 +22,17 @@ const app = {};
 // data.delete("test","smsobuj",(err)=>{
 //     console.log(err);
 // });
-
-
+// test Notification
+notification.sendSMS('+8801797972527','Hello',(err)=>{
+    console.log(err);
+})
 
 // Create server Function
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
     server.listen(environments.port, environments.hostname, () => {
         // console.log(environment);
+        console.log(process.env.NODE_ENV);
         console.log(`listen the server ${environments.port}`);
     });
 };

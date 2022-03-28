@@ -13,12 +13,22 @@ environment.staging={
     port:3000,
     hostname:'localhost',
     mode:'staging',
+    twilio:{
+        fromPhone:'+8801521471319',
+        accountsid:'ACa67b65d80c6c2e033254da6bc6cddeb6',
+        authToken:'1b4a225eb55bb00518d6d0937b438e53'
+    }
 }
 // production object 
 environment.production={
     port:5000,
     hostname:'localhost',
     mode:'production',
+    twilio:{
+        fromPhone:'',
+        accountsid:'ACa67b65d80c6c2e033254da6bc6cddeb6',
+        authToken:'1b4a225eb55bb00518d6d0937b438e53'
+    }
 }
 
 // current environment
